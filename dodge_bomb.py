@@ -11,6 +11,8 @@ delta = { #移動量の辞書
     pg.K_RIGHT:(+5,0)
 }
 
+
+
 def ck_bound(obj_rct:pg.Rect):
     """
     引数：こうかとんRect　または　ばくだんRect
@@ -30,36 +32,56 @@ def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
+
+    """こうかとん"""
     kk_img = pg.image.load("ex02/fig/3.png")
+    kk_end_img = pg.image.load("ex02/fig/9.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
+    kk_end_img = pg.transform.rotozoom(kk_end_img, 0, 2.0)
     kk_rct = kk_img.get_rect()
     kk_rct.center = (900,400)
+    kk_end_rct = kk_end_img.get_rect()
 
+    kk_flip_img = pg.transform.flip(kk_img,True,False)
+    kk_img2 = pg.transform.rotozoom(kk_flip_img,270,1.0)
+    kk_img3 = pg.transform.rotozoom(kk_flip_img,315,1.0)
+    kk_img4 = pg.transform.rotozoom(kk_flip_img,45,1.0)
+    kk_img5 = pg.transform.rotozoom(kk_flip_img,90,1.0)
 
+    kk_img6 = pg.transform.rotozoom(kk_img,315,1.0)
+    kk_img7 = pg.transform.rotozoom(kk_img,45,1.0)
+   
+    """ばくだん"""
     bd_img = pg.Surface((20, 20))#練習１：爆弾surfaceをつくる
     bd_img.set_colorkey((0, 0, 0))
     pg.draw.circle(bd_img, (255, 0, 0), (10, 10), 10)
     bd_rct = bd_img.get_rect()#１練習１：SurfaceからRectを抽出
     (x, y) =(random.randint(0,WIDTH), random.randint(0,HEIGHT)) 
     bd_rct.center = (x, y)#Rectにランダムな座標を設定する
+    
     clock = pg.time.Clock()
     tmr = 0
     (vx, vy) = (+5, +5)#練習２　移動の値設定
 
-
+    kk_lst = { #追加機能１の画像と移動値のリスト
+        (+5,0):kk_flip_img,
+        (0,-5):kk_img5,
+        (+5,-5):kk_img4,
+        (+5,+5):kk_img3,
+        (0,+5):kk_img2,
+        (-5,-0):kk_img,
+        (-5,-5):kk_img6,
+        (-5,+5):kk_img7,
+        (0,0):kk_img
+    }
     
-    
-
-
-    
-    
-
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
             
         if kk_rct.colliderect(bd_rct):
+            #screen.blit(kk_end_img,kk_rct)
             print("gameover!")
             return
 
@@ -72,11 +94,13 @@ def main():
             if key_lst[key]:
                 sum_move[0] += move[0] #横方向の移動値の計算
                 sum_move[1] +=move[1] #縦方向の移動値の計算
+        kk_kakudo = kk_lst[sum_move[0],sum_move[1]]#辞書から入力に対する画像を代入
         kk_rct.move_ip(sum_move[0],sum_move[1])
+
         if ck_bound(kk_rct) != (True,True):
              kk_rct.move_ip(-sum_move[0],-sum_move[1])
 
-        screen.blit(kk_img, kk_rct)
+        screen.blit(kk_kakudo, kk_rct)#お角度にお画像を表示
         """爆弾"""
         
         bd_rct.move_ip(vx,vy)#練習２　移動おの値に応じた距離を移動し続ける
