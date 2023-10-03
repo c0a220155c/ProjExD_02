@@ -64,7 +64,14 @@ def main():
     bd_rct = bd_img.get_rect()#１練習１：SurfaceからRectを抽出
     (x, y) =(random.randint(0,WIDTH), random.randint(0,HEIGHT)) 
     bd_rct.center = (x, y)#Rectにランダムな座標を設定する
-    
+
+    bd2_img = pg.Surface((20,20))
+    bd2_img.set_colorkey((0,0,0))
+    pg.draw.circle(bd2_img, (255, 0, 0), (10, 10), 10)
+    bd2_rct = bd2_img.get_rect()#１練習１：SurfaceからRectを抽出
+    (x, y) =(random.randint(0,WIDTH), random.randint(0,HEIGHT)) 
+    bd2_rct.center = (x, y)#Rectにランダムな座標を設定する
+
     accs = [a for a in range(1,11)]
     bb_imgs = []
     for r in range(1,11):
@@ -100,8 +107,9 @@ def main():
             
         if kk_rct.colliderect(bd_rct):
             kk_kakudo = kk_end_img
+            screen.blit(kk_kakudo, kk_rct)
             print("gameover!")
-            #return
+            return
 
         screen.blit(bg_img, [0, 0])
         txt = font.render(str(tmr), True, (255, 0, 0))
