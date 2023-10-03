@@ -21,6 +21,7 @@ def main():
     bd_rct.center = (x, y)#Rectにランダムな座標を設定する
     clock = pg.time.Clock()
     tmr = 0
+    (vx, vy) = (+5, +5)#練習２　移動の値設定
     
 
     while True:
@@ -30,9 +31,10 @@ def main():
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, [900, 400])
         screen.blit(bd_img, bd_rct) 
+        bd_rct.move_ip(vx,vy)#練習２　移動おの値に応じた距離を移動し続ける
         pg.display.update()
         tmr += 1
-        clock.tick(10)
+        clock.tick(50)
 
 
 if __name__ == "__main__":
