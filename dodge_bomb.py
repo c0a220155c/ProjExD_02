@@ -86,7 +86,7 @@ def main():
     tmr = 0
     (vx, vy) = (+5, +5)#練習２　移動の値設定
 
-    kk_lst = { #追加機能１の画像と移動値のリスト
+    kk_lst = { #追加機能１の画像と移動値のリストです
         (+5,0):kk_flip_img,
         (0,-5):kk_img5,
         (+5,-5):kk_img4,
@@ -98,8 +98,6 @@ def main():
         (0,0):kk_img
     }
 
-
-    
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
