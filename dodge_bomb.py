@@ -13,6 +13,7 @@ delta = { #移動量の辞書
 
 
 
+
 def ck_bound(obj_rct:pg.Rect):
     """
     引数：こうかとんRect　または　ばくだんRect
@@ -26,12 +27,17 @@ def ck_bound(obj_rct:pg.Rect):
     if obj_rct.top < 0 or HEIGHT < obj_rct.bottom:
         tate = False
     return yoko,tate
+
+
     
 def main():
     
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
+    
+    font = pg.font.Font(None, 80)
+    
 
     """こうかとん"""
     kk_img = pg.image.load("ex02/fig/3.png")
@@ -59,6 +65,16 @@ def main():
     (x, y) =(random.randint(0,WIDTH), random.randint(0,HEIGHT)) 
     bd_rct.center = (x, y)#Rectにランダムな座標を設定する
     
+    accs = [a for a in range(1,11)]
+    bb_imgs = []
+    for r in range(1,11):
+        bb_img = pg.Surface((20*r,20*r))
+        bd_img.set_colorkey((0, 0, 0))
+        pg.draw.circle(bb_img,(255,0,0), (10*r, 10*r), 10*r)
+        bb_imgs.append(bb_img)
+    #avx,avy = vx*accs[min(tmr//500,9)],vy*accs[min(tmr//500,9)]
+    #bb_img = bb_imgs[min(tmr//500,9)]
+    
     clock = pg.time.Clock()
     tmr = 0
     (vx, vy) = (+5, +5)#練習２　移動の値設定
@@ -74,6 +90,8 @@ def main():
         (-5,+5):kk_img7,
         (0,0):kk_img
     }
+
+
     
     while True:
         for event in pg.event.get():
@@ -81,11 +99,13 @@ def main():
                 return
             
         if kk_rct.colliderect(bd_rct):
-            #screen.blit(kk_end_img,kk_rct)
+            kk_kakudo = kk_end_img
             print("gameover!")
-            return
+            #return
 
         screen.blit(bg_img, [0, 0])
+        txt = font.render(str(tmr), True, (255, 0, 0))
+        screen.blit(txt, [300, 200])
 
         """こうかとん"""
         key_lst = pg.key.get_pressed()
@@ -102,7 +122,8 @@ def main():
 
         screen.blit(kk_kakudo, kk_rct)#お角度にお画像を表示
         """爆弾"""
-        
+        avx,avy = vx*accs[min(tmr//500,9)],vy*accs[min(tmr//500,9)]
+        bb_img = bb_imgs[min(tmr//500,9)]
         bd_rct.move_ip(vx,vy)#練習２　移動おの値に応じた距離を移動し続ける
         yoko, tate = ck_bound(bd_rct)
         if not yoko:
@@ -110,11 +131,12 @@ def main():
         if not tate:
             vy *= -1
         
-        screen.blit(bd_img, bd_rct) 
+        screen.blit(bb_img, bd_rct) 
         
         pg.display.update()
         tmr += 1
-        clock.tick(50)
+        clock.tick(60)
+    
 
 
 if __name__ == "__main__":
