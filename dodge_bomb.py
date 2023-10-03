@@ -11,6 +11,20 @@ delta = { #移動量の辞書
     pg.K_RIGHT:(+5,0)
 }
 
+def ck_bound(obj_rct:pg.Rect):
+    """
+    引数：こうかとんRect　または　ばくだんRect
+    戻り値：タプル（横判定結果、縦判定結果）
+    画面内ならTrueで外ならFalse
+    """
+    yoko = True
+    if obj_rct.left < 0 or WIDTH < obj_rct.right:
+        yoko = False
+    tate = True
+    if obj_rct.top < 0 or HEIGHT < obj_rct.bottom:
+        tate = False
+    return yoko,tate
+    
 def main():
     
     pg.display.set_caption("逃げろ！こうかとん")
@@ -21,6 +35,7 @@ def main():
     kk_rct = kk_img.get_rect()
     kk_rct.center = (900,400)
 
+
     bd_img = pg.Surface((20, 20))#練習１：爆弾surfaceをつくる
     bd_img.set_colorkey((0, 0, 0))
     pg.draw.circle(bd_img, (255, 0, 0), (10, 10), 10)
@@ -30,6 +45,10 @@ def main():
     clock = pg.time.Clock()
     tmr = 0
     (vx, vy) = (+5, +5)#練習２　移動の値設定
+
+
+    
+    
 
 
     
@@ -50,11 +69,21 @@ def main():
                 sum_move[0] += move[0] #横方向の移動値の計算
                 sum_move[1] +=move[1] #縦方向の移動値の計算
         kk_rct.move_ip(sum_move[0],sum_move[1])
+        if ck_bound(kk_rct) != (True,True):
+             kk_rct.move_ip(-sum_move[0],-sum_move[1])
 
         screen.blit(kk_img, kk_rct)
         """爆弾"""
-        screen.blit(bd_img, bd_rct) 
+        
         bd_rct.move_ip(vx,vy)#練習２　移動おの値に応じた距離を移動し続ける
+        yoko, tate = ck_bound(bd_rct)
+        if not yoko:
+            vx *= -1
+        if not tate:
+            vy *= -1
+        
+        screen.blit(bd_img, bd_rct) 
+        
         pg.display.update()
         tmr += 1
         clock.tick(50)
